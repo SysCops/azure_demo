@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  flaskexample:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-03-13T18:29:45.229106+01:00"
+    description: A Helm chart for Kubernetes
+    digest: 9a3f844ae61292c2275d4a81366d2cb4ab53f595cecb34c7ee6410d747219833
+    home: https://github.com/SysCops/azure_demo
+    name: flaskexample
+    type: application
+    urls:
+    - https://syscops.github.io/azure_demo/flaskexample-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-03-13T18:29:45.228674+01:00"

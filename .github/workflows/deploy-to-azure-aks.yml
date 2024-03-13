@@ -1,0 +1,69 @@
+name: Build and Deploy to AKS
+
+env:
+  APP_NAME: flaskexample
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_to_ghcr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Lowercase the repo name and username
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          file: ./flaskexample/Dockerfile
+
+
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
+      
+      - name: Build and push Docker image to ACR
+        run: |
+          az acr build --registry ${{ secrets.ACR_NAME }} --image ${{ env.APP_NAME }}:latest .
+      
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+
+      - name: Set up Kubeconfig
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          clusterName: ${{ secrets.CLUSTER_NAME }}
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME}}
+
+      - name: Helm deploy
+        run: |
+          helm upgrade --install ${{ env.APP_NAME }} ./[chart directory] --namespace default

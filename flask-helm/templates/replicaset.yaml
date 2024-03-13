@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: {{ include "flask.fullname" . }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      type: backend
+      service: python
+  template:
+    metadata:
+      labels:
+        type: backend
+        service: python
+    spec:
+      containers:
+        - name: flaskexample
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 8080
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 8080
