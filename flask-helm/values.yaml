@@ -1,6 +1,6 @@
 image:
-  repository: https://ghcr.io
-  tag: latest
+  repository: ghcr.io/syscops/azure_demo
+  tag: bede5b7f6bd1e8acbca10b6c29563d98f0e4f714
 
 service:
   type: ClusterIP
