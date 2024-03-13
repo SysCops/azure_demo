@@ -32,8 +32,9 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           push: true
+          context: ./flaskexample
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
-          file: ./flaskexample/Dockerfile
+          # file: ./flaskexample/Dockerfile
 
 
   build_and_deploy:
