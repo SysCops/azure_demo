@@ -19,4 +19,8 @@ spec:
                 name: {{ include "flask.fullname" . }}
                 port:
                   number: 5000
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ include "flask.fullname" . }}-cert # < cert-manager will store the created certificate in this secret.
 {{- end }}

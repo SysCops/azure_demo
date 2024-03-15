@@ -15,4 +15,5 @@ ingress:
   enabled: true
   annotations: 
     kubernetes.io/ingress.class: "webapprouting.kubernetes.azure.com"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   host: azuredemo.syscops.dev

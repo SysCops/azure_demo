@@ -3,5 +3,5 @@ name: flaskexample
 home: https://github.com/SysCops/azure_demo
 description: A Helm chart for Kubernetes
 type: application
-version: 1.0.2
-appVersion: "1.0.2"
+version: 1.0.3
+appVersion: "1.0.3"
